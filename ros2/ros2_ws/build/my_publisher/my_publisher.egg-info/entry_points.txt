@@ -1,0 +1,4 @@
+[console_scripts]
+simple_publisher = my_publisher.simple_publisher:main
+simple_subscriber = my_publisher.simple_subscriber:main
+

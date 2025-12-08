@@ -1,0 +1,18 @@
+[0.681s] Invoking command in '/root/ros2_ws/build/my_publisher': PYTHONPATH=/root/ros2_ws/build/my_publisher/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/root/ros2_ws/install/my_publisher/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /root/ros2_ws/build/my_publisher/build --no-deps symlink_data
+[0.925s] running develop
+[0.996s] running egg_info
+[0.997s] writing my_publisher.egg-info/PKG-INFO
+[0.997s] writing dependency_links to my_publisher.egg-info/dependency_links.txt
+[0.998s] writing entry points to my_publisher.egg-info/entry_points.txt
+[1.000s] writing requirements to my_publisher.egg-info/requires.txt
+[1.000s] writing top-level names to my_publisher.egg-info/top_level.txt
+[1.002s] reading manifest file 'my_publisher.egg-info/SOURCES.txt'
+[1.003s] writing manifest file 'my_publisher.egg-info/SOURCES.txt'
+[1.005s] running build_ext
+[1.005s] Creating /root/ros2_ws/install/my_publisher/lib/python3.10/site-packages/my-publisher.egg-link (link to .)
+[1.006s] Installing simple_publisher script to /root/ros2_ws/install/my_publisher/lib/my_publisher
+[1.007s] Installing simple_subscriber script to /root/ros2_ws/install/my_publisher/lib/my_publisher
+[1.008s] 
+[1.008s] Installed /root/ros2_ws/build/my_publisher
+[1.009s] running symlink_data
+[1.033s] Invoked command in '/root/ros2_ws/build/my_publisher' returned '0': PYTHONPATH=/root/ros2_ws/build/my_publisher/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/root/ros2_ws/install/my_publisher/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /root/ros2_ws/build/my_publisher/build --no-deps symlink_data

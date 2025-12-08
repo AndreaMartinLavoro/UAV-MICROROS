@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  # Container micro-ROS Agent (già esistente)
+  microros-agent:
+    image: microros/micro-ros-agent:humble
+    platform: linux/arm64
+    container_name: microros_agent
+    command: udp4 --port 8888 -v6
+    ports:
+      - "8888:8888/udp"
+    networks:
+      - ros_network
+    environment:
+      - ROS_DOMAIN_ID=0
+
+  # Container ROS2 Publisher
+  ros2-publisher:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    platform: linux/arm64
+    container_name: ros2_publisher
+    stdin_open: true
+    tty: true
+    networks:
+      - ros_network
+    environment:
+      - ROS_DOMAIN_ID=0
+      - RMW_IMPLEMENTATION=rmw_fastrtps_cpp
+    depends_on:
+      - microros-agent
+    # Comando per avviare il publisher
+    # Decommenta la riga sotto per avvio automatico
+    # command: ros2 run my_publisher publisher_node
+
+networks:
+  ros_network:
+    driver: bridge

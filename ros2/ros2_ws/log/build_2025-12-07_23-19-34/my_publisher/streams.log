@@ -1,0 +1,24 @@
+[0.664s] Invoking command in '/root/ros2_ws/build/my_publisher': PYTHONPATH=/root/ros2_ws/build/my_publisher/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/root/ros2_ws/install/my_publisher/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /root/ros2_ws/build/my_publisher/build --no-deps symlink_data
+[0.893s] running develop
+[0.961s] running egg_info
+[0.961s] creating my_publisher.egg-info
+[0.962s] writing my_publisher.egg-info/PKG-INFO
+[0.962s] writing dependency_links to my_publisher.egg-info/dependency_links.txt
+[0.963s] writing entry points to my_publisher.egg-info/entry_points.txt
+[0.963s] writing requirements to my_publisher.egg-info/requires.txt
+[0.964s] writing top-level names to my_publisher.egg-info/top_level.txt
+[0.964s] writing manifest file 'my_publisher.egg-info/SOURCES.txt'
+[0.966s] reading manifest file 'my_publisher.egg-info/SOURCES.txt'
+[0.967s] writing manifest file 'my_publisher.egg-info/SOURCES.txt'
+[0.968s] running build_ext
+[0.968s] Creating /root/ros2_ws/install/my_publisher/lib/python3.10/site-packages/my-publisher.egg-link (link to .)
+[0.969s] Installing simple_publisher script to /root/ros2_ws/install/my_publisher/lib/my_publisher
+[0.970s] 
+[0.970s] Installed /root/ros2_ws/build/my_publisher
+[0.971s] running symlink_data
+[0.971s] creating /root/ros2_ws/install/my_publisher/share/ament_index
+[0.971s] creating /root/ros2_ws/install/my_publisher/share/ament_index/resource_index
+[0.975s] creating /root/ros2_ws/install/my_publisher/share/ament_index/resource_index/packages
+[0.975s] symbolically linking /root/ros2_ws/build/my_publisher/resource/my_publisher -> /root/ros2_ws/install/my_publisher/share/ament_index/resource_index/packages
+[0.976s] symbolically linking /root/ros2_ws/build/my_publisher/package.xml -> /root/ros2_ws/install/my_publisher/share/my_publisher
+[0.990s] Invoked command in '/root/ros2_ws/build/my_publisher' returned '0': PYTHONPATH=/root/ros2_ws/build/my_publisher/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/root/ros2_ws/install/my_publisher/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /root/ros2_ws/build/my_publisher/build --no-deps symlink_data
