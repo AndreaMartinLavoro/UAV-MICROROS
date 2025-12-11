@@ -596,6 +596,178 @@ ros2 topic echo /imu --once
 # Deve mostrare JSON con dati validi
 ```
 
+### Test Controllo Motori con ROS2
+
+#### Verifica Topic Disponibili
+
+Prima di iniziare, controlla che l'ESP32 sia connesso e i topic siano visibili:
+
+```bash
+ros2 topic list
+```
+
+Output atteso:
+```
+/m1ctrl
+/m2ctrl
+/m3ctrl
+/m4ctrl
+/imu
+/parameter_events
+/rosout
+```
+
+#### Test Singolo Motore
+
+Testa ogni motore individualmente per verificare il corretto funzionamento:
+
+```bash
+# Motore 1 (Motor A) - velocità 500 avanti
+ros2 topic pub --once /m1ctrl std_msgs/msg/String "{data: '500'}"
+
+# Motore 2 (Motor B) - velocità -500 indietro
+ros2 topic pub --once /m2ctrl std_msgs/msg/String "{data: '-500'}"
+
+# Motore 3 (Motor C) - velocità massima avanti (1000)
+ros2 topic pub --once /m3ctrl std_msgs/msg/String "{data: '1000'}"
+
+# Motore 4 (Motor D) - velocità massima indietro (-1000)
+ros2 topic pub --once /m4ctrl std_msgs/msg/String "{data: '-1000'}"
+
+# Ferma tutti i motori
+ros2 topic pub --once /m1ctrl std_msgs/msg/String "{data: '0'}"
+ros2 topic pub --once /m2ctrl std_msgs/msg/String "{data: '0'}"
+ros2 topic pub --once /m3ctrl std_msgs/msg/String "{data: '0'}"
+ros2 topic pub --once /m4ctrl std_msgs/msg/String "{data: '0'}"
+```
+
+#### Range di Velocità
+
+- **Input**: da `-1000` a `1000`
+- **Output PWM**: da `-255` a `255`
+- `-1000` = massima velocità indietro (PWM 255)
+- `0` = fermo
+- `1000` = massima velocità avanti (PWM 255)
+
+#### Script Bash per Test Automatico
+
+Crea un file `test_motors.sh`:
+
+```bash
+#!/bin/bash
+
+echo "=== Test Motori ESP32 ==="
+echo ""
+
+echo "Test Motore 1 (Motor A)..."
+ros2 topic pub --once /m1ctrl std_msgs/msg/String "{data: '500'}"
+sleep 2
+ros2 topic pub --once /m1ctrl std_msgs/msg/String "{data: '0'}"
+sleep 1
+
+echo "Test Motore 2 (Motor B)..."
+ros2 topic pub --once /m2ctrl std_msgs/msg/String "{data: '500'}"
+sleep 2
+ros2 topic pub --once /m2ctrl std_msgs/msg/String "{data: '0'}"
+sleep 1
+
+echo "Test Motore 3 (Motor C)..."
+ros2 topic pub --once /m3ctrl std_msgs/msg/String "{data: '500'}"
+sleep 2
+ros2 topic pub --once /m3ctrl std_msgs/msg/String "{data: '0'}"
+sleep 1
+
+echo "Test Motore 4 (Motor D)..."
+ros2 topic pub --once /m4ctrl std_msgs/msg/String "{data: '500'}"
+sleep 2
+ros2 topic pub --once /m4ctrl std_msgs/msg/String "{data: '0'}"
+sleep 1
+
+echo ""
+echo "Test completato! Tutti i motori fermati."
+```
+
+Rendi lo script eseguibile ed eseguilo:
+
+```bash
+chmod +x test_motors.sh
+./test_motors.sh
+```
+
+#### Test Avanzati
+
+**Test velocità crescente:**
+
+```bash
+# Incrementa gradualmente la velocità del Motore 1
+for speed in 200 400 600 800 1000; do
+  echo "Velocità: $speed"
+  ros2 topic pub --once /m1ctrl std_msgs/msg/String "{data: '$speed'}"
+  sleep 1
+done
+
+# Ferma
+ros2 topic pub --once /m1ctrl std_msgs/msg/String "{data: '0'}"
+```
+
+**Test movimento robot (tutti i motori avanti):**
+
+```bash
+# Tutti i motori avanti a velocità 600
+ros2 topic pub --once /m1ctrl std_msgs/msg/String "{data: '600'}" &
+ros2 topic pub --once /m2ctrl std_msgs/msg/String "{data: '600'}" &
+ros2 topic pub --once /m3ctrl std_msgs/msg/String "{data: '600'}" &
+ros2 topic pub --once /m4ctrl std_msgs/msg/String "{data: '600'}"
+
+# Attendere 3 secondi
+sleep 3
+
+# Ferma tutto
+ros2 topic pub --once /m1ctrl std_msgs/msg/String "{data: '0'}" &
+ros2 topic pub --once /m2ctrl std_msgs/msg/String "{data: '0'}" &
+ros2 topic pub --once /m3ctrl std_msgs/msg/String "{data: '0'}" &
+ros2 topic pub --once /m4ctrl std_msgs/msg/String "{data: '0'}"
+```
+
+**Test rotazione sul posto:**
+
+```bash
+# Rotazione oraria (motori sx avanti, dx indietro)
+ros2 topic pub --once /m1ctrl std_msgs/msg/String "{data: '500'}" &
+ros2 topic pub --once /m2ctrl std_msgs/msg/String "{data: '-500'}" &
+ros2 topic pub --once /m3ctrl std_msgs/msg/String "{data: '500'}" &
+ros2 topic pub --once /m4ctrl std_msgs/msg/String "{data: '-500'}"
+
+sleep 2
+
+# Ferma tutto
+ros2 topic pub --once /m1ctrl std_msgs/msg/String "{data: '0'}" &
+ros2 topic pub --once /m2ctrl std_msgs/msg/String "{data: '0'}" &
+ros2 topic pub --once /m3ctrl std_msgs/msg/String "{data: '0'}" &
+ros2 topic pub --once /m4ctrl std_msgs/msg/String "{data: '0'}"
+```
+
+#### Monitoraggio Dati IMU
+
+Monitora in tempo reale i dati pitch e roll pubblicati dall'ESP32:
+
+```bash
+# Visualizza i dati IMU
+ros2 topic echo /imu
+
+# Controlla la frequenza di pubblicazione (dovrebbe essere ~1 Hz)
+ros2 topic hz /imu
+
+# Visualizza solo un messaggio
+ros2 topic echo /imu --once
+```
+
+Output atteso:
+```
+data: '{"pitch":2.3,"roll":-1.5}'
+---
+```
+
 ### Diagnostica Monitor Seriale
 
 All'avvio dovresti vedere:

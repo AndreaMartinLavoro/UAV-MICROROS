@@ -1,0 +1,87 @@
+#include <Arduino.h>
+#include <Wire.h>
+
+// Pin I2C ESP32
+#define I2C_SDA 21
+#define I2C_SCL 22
+
+// Indirizzo MPU6050
+#define DEVICE_ADDRESS 0x68
+
+// Registri MPU6050
+#define MPU6050_PWR_MGMT_1   0x6B
+#define MPU6050_ACCEL_XOUT_H 0x3B
+#define MPU6050_GYRO_CONFIG  0x1B
+#define MPU6050_ACCEL_CONFIG 0x1C
+
+struct TiltData {
+  float pitch;
+  float roll;
+};
+
+void setup() {
+  Serial.begin(115200);
+  delay(500);
+
+  Wire.begin(I2C_SDA, I2C_SCL);
+  Wire.setClock(100000);
+
+  // Risveglio sensore
+  Wire.beginTransmission(DEVICE_ADDRESS);
+  Wire.write(MPU6050_PWR_MGMT_1);
+  Wire.write(0x00);
+  Wire.endTransmission();
+
+  // Config accelerometro ±8g
+  Wire.beginTransmission(DEVICE_ADDRESS);
+  Wire.write(MPU6050_ACCEL_CONFIG);
+  Wire.write(0x10);
+  Wire.endTransmission();
+
+  // Config giroscopio ±500°/s
+  Wire.beginTransmission(DEVICE_ADDRESS);
+  Wire.write(MPU6050_GYRO_CONFIG);
+  Wire.write(0x08);
+  Wire.endTransmission();
+
+  delay(100);
+}
+
+TiltData readPitchRoll() {
+  TiltData t = {0, 0};
+
+  Wire.beginTransmission(DEVICE_ADDRESS);
+  Wire.write(MPU6050_ACCEL_XOUT_H);
+  Wire.endTransmission(false);
+  Wire.requestFrom(DEVICE_ADDRESS, (uint8_t)14);
+
+  if (Wire.available() < 14) return t;
+
+  int16_t ax = (Wire.read() << 8) | Wire.read();
+  int16_t ay = (Wire.read() << 8) | Wire.read();
+  int16_t az = (Wire.read() << 8) | Wire.read();
+
+  // Ignora temperatura e giroscopio
+  for (int i = 0; i < 8; i++) Wire.read();
+
+  float ax_g = ax / 4096.0;
+  float ay_g = ay / 4096.0;
+  float az_g = az / 4096.0;
+
+  t.pitch = atan2(ay_g, sqrt(ax_g * ax_g + az_g * az_g)) * 180.0 / PI;
+  t.roll  = atan2(-ax_g, az_g) * 180.0 / PI;
+
+  return t;
+}
+
+void loop() {
+  TiltData tilt = readPitchRoll();
+
+  Serial.print("Pitch: ");
+  Serial.print(tilt.pitch, 1);
+  Serial.print("°  |  Roll: ");
+  Serial.print(tilt.roll, 1);
+  Serial.println("°");
+
+  delay(200);
+}
