@@ -14,8 +14,8 @@
 // ========================================
 // CONFIGURAZIONE WiFi e Agent
 // ========================================
-const char* ssid = "FIBRA-M4A";
-const char* password = "7zQIxOAtXV5cV9";
+const char* ssid = "xxxxxxxx";
+const char* password = "xxxxxxxxx";
 const char* agent_ip = "192.168.1.31";
 const int agent_port = 8888;
 
